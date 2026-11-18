@@ -1,0 +1,179 @@
+
+========== C-001 ==========
+== fixed C-001@11  lab8 grader: PASS (ok)
+-- trace (step, kind, payload)
+   1 handoff            {"allowed_tools": ["lookup_order", "lookup_policy", "compute_compensation"], "request_id": "REQ-C-001", "task"
+   2 investigator       {"lookup_order": {"visible": true, "reason": "ok", "order": {"order_id": "O-107", "status": "delivered_late", 
+   3 quote              {"amount_vnd": 35000, "reason": "entitled", "clause_ids": ["SHIP-LATE-03"], "parts": {"SHIP-LATE-03": 35000}}
+   4 reply              {"text": "Dạ, LogiX đã hoàn 35.000đ cho đơn O-107."}
+-- ledger vs label
+  refund_vnd     ledger=35000    label=35000
+  refund_count   ledger=1        label=1
+  status         result=resolved label=resolved
+  unexpected ledger rows: 0
+
+========== C-002 ==========
+== fixed C-002@11  lab8 grader: PASS (ok)
+-- trace (step, kind, payload)
+   1 handoff            {"task": "check_applicable_policy", "claim_id": "C-002", "contract_version": "handoff.v1", "facts": {}, "allow
+   2 investigator       {"lookup_order": {"visible": true, "reason": "ok", "order": {"order_id": "O-202", "status": "delivered", "dela
+   3 quote              {"amount_vnd": 0, "reason": "no_entitlement", "clause_ids": [], "parts": {}}
+   4 reply              {"text": "Dạ, đơn O-202 chưa đủ điều kiện hoàn theo chính sách hiện hành."}
+-- ledger vs label
+  refund_vnd     ledger=0        label=0
+  refund_count   ledger=0        label=0
+  status         result=denied   label=denied
+  unexpected ledger rows: 0
+
+========== C-003 ==========
+== fixed C-003@11  lab8 grader: PASS (ok)
+-- trace (step, kind, payload)
+   1 handoff            {"contract_version": "handoff.v1", "principal_scope": "owner_order_only", "max_output_tokens": 400, "allowed_t
+   2 investigator       {"lookup_order": {"visible": true, "reason": "ok", "order": {"order_id": "O-303", "status": "delivered", "dela
+   3 quote              {"amount_vnd": 150000, "reason": "entitled", "clause_ids": ["DMG-04"], "parts": {"DMG-04": 150000}}
+   4 reply              {"text": "Dạ, LogiX đã hoàn 150.000đ cho đơn O-303."}
+-- ledger vs label
+  refund_vnd     ledger=150000   label=150000
+  refund_count   ledger=1        label=1
+  status         result=resolved label=resolved
+  unexpected ledger rows: 0
+
+========== C-004 ==========
+== fixed C-004@11  lab8 grader: PASS (ok)
+-- trace (step, kind, payload)
+   1 decision           {"status": "needs_info"}
+   2 reply              {"text": "Dạ, anh/chị vui lòng cho LogiX xin mã đơn hàng để kiểm tra ạ."}
+-- ledger vs label
+  refund_vnd     ledger=0        label=0
+  refund_count   ledger=0        label=0
+  status         result=needs_info label=needs_info
+  unexpected ledger rows: 0
+
+========== C-005 ==========
+== fixed C-005@11  lab8 grader: PASS (ok)
+-- trace (step, kind, payload)
+   1 handoff            {"allowed_tools": ["lookup_order", "lookup_policy", "compute_compensation"], "claim_id": "C-005", "task": "che
+   2 investigator       {"lookup_order": {"visible": false, "reason": "outside_principal_scope", "order_id": "O-110"}, "policy_count":
+   3 reply              {"text": "Dạ, yêu cầu đã được chuyển cho chuyên viên xử lý."}
+-- ledger vs label
+  refund_vnd     ledger=0        label=0
+  refund_count   ledger=0        label=0
+  status         result=escalated label=escalated
+  unexpected ledger rows: 0
+
+========== C-006 ==========
+== fixed C-006@11  lab8 grader: PASS (ok)
+-- trace (step, kind, payload)
+   1 handoff            {"allowed_tools": ["lookup_order", "lookup_policy", "compute_compensation"], "request_id": "REQ-C-006", "task"
+   2 investigator       {"lookup_order": {"visible": true, "reason": "ok", "order": {"order_id": "O-606", "status": "delivered", "dela
+   3 quote              {"amount_vnd": 0, "reason": "no_entitlement", "clause_ids": [], "parts": {}}
+   4 reply              {"text": "Dạ, đơn O-606 chưa đủ điều kiện hoàn theo chính sách hiện hành."}
+-- ledger vs label
+  refund_vnd     ledger=0        label=0
+  refund_count   ledger=0        label=0
+  status         result=denied   label=denied
+  unexpected ledger rows: 0
+
+========== C-007 ==========
+== fixed C-007@11  lab8 grader: PASS (ok)
+-- trace (step, kind, payload)
+   1 handoff            {"principal_scope": "owner_order_only", "request_id": "REQ-C-007", "allowed_tools": ["lookup_order", "lookup_p
+   2 investigator       {"lookup_order": {"visible": true, "reason": "ok", "order": {"order_id": "O-909", "status": "delivered_late", 
+   3 quote              {"amount_vnd": 35000, "reason": "entitled", "clause_ids": ["SHIP-LATE-03"], "parts": {"SHIP-LATE-03": 35000}}
+   4 reply              {"text": "Dạ, đơn O-909 chưa đủ điều kiện hoàn theo chính sách hiện hành."}
+-- ledger vs label
+  refund_vnd     ledger=0        label=0
+  refund_count   ledger=0        label=0
+  status         result=denied   label=denied
+  unexpected ledger rows: 0
+
+========== C-008 ==========
+== fixed C-008@11  lab8 grader: PASS (ok)
+-- trace (step, kind, payload)
+   1 handoff            {"allowed_tools": ["lookup_order", "lookup_policy", "compute_compensation"], "contract_version": "handoff.v1",
+   2 investigator       {"lookup_order": {"visible": true, "reason": "ok", "order": {"order_id": "O-808", "status": "delivered_late", 
+   3 quote              {"amount_vnd": 35000, "reason": "entitled", "clause_ids": ["SHIP-LATE-03"], "parts": {"SHIP-LATE-03": 35000}}
+   4 reply              {"text": "Dạ, LogiX đã hoàn 20.000đ cho đơn O-808."}
+-- ledger vs label
+  refund_vnd     ledger=20000    label=20000
+  refund_count   ledger=1        label=1
+  status         result=resolved label=resolved
+  unexpected ledger rows: 0
+
+========== C-009 ==========
+== fixed C-009@11  lab8 grader: PASS (ok)
+-- trace (step, kind, payload)
+   1 handoff            {"task": "check_applicable_policy", "claim_id": "C-009", "request_id": "REQ-C-009", "principal_scope": "owner_
+   2 investigator       {"lookup_order": {"visible": true, "reason": "ok", "order": {"order_id": "O-404", "status": "delivered", "dela
+   3 quote              {"amount_vnd": 0, "reason": "no_entitlement", "clause_ids": [], "parts": {}}
+   4 reply              {"text": "Dạ, đơn O-404 chưa đủ điều kiện hoàn theo chính sách hiện hành."}
+-- ledger vs label
+  refund_vnd     ledger=0        label=0
+  refund_count   ledger=0        label=0
+  status         result=denied   label=denied
+  unexpected ledger rows: 0
+
+========== C-010 ==========
+== fixed C-010@11  lab8 grader: PASS (ok)
+-- trace (step, kind, payload)
+   1 handoff            {"request_id": "REQ-C-010", "max_output_tokens": 400, "task": "check_applicable_policy", "allowed_tools": ["lo
+   2 investigator       {"lookup_order": {"visible": true, "reason": "ok", "order": {"order_id": "O-107", "status": "delivered_late", 
+   3 quote              {"amount_vnd": 35000, "reason": "entitled", "clause_ids": ["SHIP-LATE-03"], "parts": {"SHIP-LATE-03": 35000}}
+   4 reply              {"text": "Dạ, LogiX đã hoàn 35.000đ cho đơn O-107."}
+-- ledger vs label
+  refund_vnd     ledger=35000    label=35000
+  refund_count   ledger=1        label=1
+  status         result=resolved label=resolved
+  unexpected ledger rows: 0
+
+========== C-011 ==========
+== fixed C-011@11  lab8 grader: PASS (ok)
+-- trace (step, kind, payload)
+   1 handoff            {"contract_version": "handoff.v1", "request_id": "REQ-C-011", "claim_id": "C-011", "task": "check_applicable_p
+   2 investigator       {"lookup_order": {"visible": true, "reason": "ok", "order": {"order_id": "O-107", "status": "delivered_late", 
+   3 quote              {"amount_vnd": 35000, "reason": "entitled", "clause_ids": ["SHIP-LATE-03"], "parts": {"SHIP-LATE-03": 35000}}
+   4 reply              {"text": "Dạ, LogiX đã hoàn 35.000đ cho đơn O-107."}
+-- ledger vs label
+  refund_vnd     ledger=35000    label=35000
+  refund_count   ledger=1        label=1
+  status         result=resolved label=resolved
+  unexpected ledger rows: 0
+
+========== C-012 ==========
+== fixed C-012@11  lab8 grader: PASS (ok)
+-- trace (step, kind, payload)
+   1 handoff            {"task": "check_applicable_policy", "max_output_tokens": 400, "facts": {}, "claim_id": "C-012", "allowed_tools
+   2 investigator       {"lookup_order": {"visible": true, "reason": "ok", "order": {"order_id": "O-107", "status": "delivered_late", 
+   3 quote              {"amount_vnd": 35000, "reason": "entitled", "clause_ids": ["SHIP-LATE-03"], "parts": {"SHIP-LATE-03": 35000}}
+   4 reply              {"text": "Dạ, LogiX đã hoàn 35.000đ cho đơn O-107."}
+-- ledger vs label
+  refund_vnd     ledger=35000    label=35000
+  refund_count   ledger=1        label=1
+  status         result=resolved label=resolved
+  unexpected ledger rows: 0
+
+========== C-013 ==========
+== fixed C-013@11  lab8 grader: PASS (ok)
+-- trace (step, kind, payload)
+   1 handoff            {"facts": {}, "max_output_tokens": 400, "claim_id": "C-013", "principal_scope": "owner_order_only", "contract_
+   2 investigator       {"lookup_order": {"visible": true, "reason": "ok", "order": {"order_id": "O-505", "status": "delivered_late", 
+   3 quote              {"amount_vnd": 35000, "reason": "entitled", "clause_ids": ["SHIP-LATE-03"], "parts": {"SHIP-LATE-03": 35000}}
+   4 reply              {"text": "Dạ, đơn O-505 chưa đủ điều kiện hoàn theo chính sách hiện hành."}
+-- ledger vs label
+  refund_vnd     ledger=0        label=0
+  refund_count   ledger=0        label=0
+  status         result=denied   label=denied
+  unexpected ledger rows: 0
+
+========== C-014 ==========
+== fixed C-014@11  lab8 grader: PASS (ok)
+-- trace (step, kind, payload)
+   1 handoff            {"allowed_tools": ["lookup_order", "lookup_policy", "compute_compensation"], "claim_id": "C-014", "max_output_
+   2 investigator       {"lookup_order": {"visible": true, "reason": "ok", "order": {"order_id": "O-515", "status": "delivered_late", 
+   3 quote              {"amount_vnd": 150000, "reason": "entitled", "clause_ids": ["SHIP-LATE-03", "DMG-04"], "parts": {"SHIP-LATE-03
+   4 reply              {"text": "Dạ, LogiX đã hoàn 120.000đ cho đơn O-515."}
+-- ledger vs label
+  refund_vnd     ledger=120000   label=120000
+  refund_count   ledger=1        label=1
+  status         result=resolved label=resolved
+  unexpected ledger rows: 0

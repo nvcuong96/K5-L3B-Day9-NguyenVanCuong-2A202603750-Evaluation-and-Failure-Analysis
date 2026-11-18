@@ -1,14 +1,13 @@
 # Failure taxonomy v1 (bạn điền)
 | ID | Tên | Định nghĩa (1 câu) | Layer | Bằng chứng (claim@seed / trace) | Grader | Metric |
 |---|---|---|---|---|---|---|
-| FM-01 | leaky_trace — secret lộ trong trace | | | | | |
-| FM-02 | ignore_denied — bỏ qua approval bị từ chối | | | | | |
-| FM-03 | ticket_trust — tin ticket hơn DB | | | | | |
-| FM-04 | sum_parts / round_down — cộng/làm tròn sai | | | | | |
-| FM-05 | pre_deducted — trừ trước khi được duyệt | | | | | |
-| FM-06 | stale_clause — dùng điều khoản cũ | | | | | |
-| FM-07 | sibling_refund — hoàn tiền nhầm claim anh em | | | | | |
-| FM-08 | misreport — reply nói số tiền khác ledger | | | | | |
-| FM-09 | cross_principal — lẫn dữ liệu giữa principal (v2) | | | | | |
+| FM-02 | ignore_denied — bỏ qua approval bị từ chối | Agent tiếp tục thực hiện hoặc báo thành công một thao tác dù approval hoặc policy decision đã bị từ chối. | guardrail/approval | C-007@seed 11, `seeded_regression`: event 3 `quote` ghi `amount_vnd=35000`, event 5 `reply` báo đã hoàn tiền, nhưng expected là `status=denied`, `refund_vnd=0` và `refund_count=0`. | code | approval_bypass count = 0 |
+| FM-03 | ticket_trust — tin ticket hơn DB | Agent thay độ trễ trong DB bằng số ngày ghi trong ticket rồi tính compensation sai. | retrieval | C-002@seed 11, `seeded_regression`: event `model_override` ghi `delay_days=5`, trong khi DB có đơn `delivered` và `delay_days=0`; trạng thái ledger sai thành resolved và hoàn 20.000đ thay vì denied. | code | db_fact_kept = true; pass_rate |
+| FM-04 | sum_parts / round_down — cộng/làm tròn sai | Agent cộng các phần compensation thay vì lấy mức entitlements hợp lệ hoặc làm tròn proposal xuống sai mức. | model/prompt | C-014@seed 11, `seeded_regression`: quote có các parts `SHIP-LATE-03=35000` và `DMG-04=150000`; variant tính/ghi proposal sai lệch sau các bước history/proposal. Đây là anchor cho quy tắc compensation phải theo clause lớn nhất hoặc mức ledger hợp lệ, không cộng đúng sai tùy ý. | code | refund_amount_correct |
+| FM-05 | pre_deducted — trừ trước khi được duyệt | Agent tự trừ khoản đã hoàn khỏi proposal trước khi host duyệt, làm proposal hoặc ledger lệch kết quả expected. | orchestration/state | C-013@seed 11, `seeded_regression`: refund_history cho biết đã hoàn 35.000đ, event `proposal` lại đặt amount 0 dù host chờ giữ quote 35.000đ; C-014 host ghi 90.000đ thay cho 120.000đ vì proposal đã bị trừ/history. | code | refund_amount_correct |
+| FM-06 | stale_clause — dùng điều khoản cũ | Agent dùng clause mà ticket đề cập dù chính sách/DB xác định clause đó đã lỗi thời hoặc không còn hiệu lực. | retrieval | C-006 trong public matrix: ticket yêu cầu dùng `SHIP-LATE-OLD` nhưng expected vẫn denied; danh sách policy DB không chọn clause cũ làm entitlement. | code | db_fact_kept / pass_rate |
+| FM-07 | sibling_refund — hoàn tiền nhầm claim anh em | Agent ghi refund cho claim anh em hoặc tạo một ledger row cho claim khác thay vì đúng claim được xử lý. | orchestration/state | C-010/C-011/C-012 dùng cùng order `O-107` và principal `P-100`; mọi refund hoặc row ledger ngoài claim hiện tại đều là sai. `unexpected_ledger_rows` phải bắt được việc ghi lẫn claim. | code | approval_bypass count = 0; unexpected ledger rows = 0 |
+| FM-08 | misreport — reply nói số tiền khác ledger | Agent báo reply một số proposal hoặc số khác với số tiền thực sự ghi trong ledger. | model/prompt | C-008@seed 11: ledger ghi 20.000đ và label cũng là 20.000đ nhưng reply có thể bị biến thể nói 35.000đ; C-014@seed 11, `seeded_regression`: ledger ghi 90.000đ nhưng reply nói 120.000đ, lệch trực tiếp ledger. | code/judge | refund_amount_correct hoặc metric reply-ledger match |
+| FM-09 | cross_principal — lẫn dữ liệu giữa principal (v2) | Agent truy cập hoặc hoàn tiền cho dữ liệu thuộc principal khác thay vì chỉ trong phạm vi principal của claim. | guardrail/approval | C-005 trong public matrix: `O-110` thuộc principal khác, `lookup_order.visible=false`, expected escalated và không phát sinh refund; mọi dữ liệu PII hoặc refund sang P-100 đều là cross-principal. | code | approval_bypass count = 0; unexpected ledger rows = 0 |
 Mã và tên ngắn cố định (dùng trong `failure_modes` của eval set); bạn tự viết định nghĩa, bằng chứng, grader và metric.
 Quy tắc: mỗi FM phải quan sát được trên trace, không phải phỏng đoán. Tiền và approval luôn chấm bằng code.

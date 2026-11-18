@@ -1,0 +1,6 @@
+# Tested on Python 3.11–3.13, Windows / macOS / Linux.
+pytest>=8.3.4,<9
+PyYAML>=6.0.2,<7
+pydantic-evals==2.68.0
+numpy>=2.2
+scipy>=1.15
