@@ -14,14 +14,14 @@ Lệnh in ra ba phần: các event trong trace (`reply`, `decision`, `model_over
 
 | Trường | Nội dung |
 |---|---|
-| Trial | `<shape> <claim>@<seed>`, run ID trong report |
-| Triệu chứng | Grader nào fail; reply nói gì so với ledger ghi gì |
-| Bước sai đầu tiên | Số thứ tự event + kind + trích payload (≤1 dòng) |
-| Vì sao là bước *đầu tiên* | Các bước trước đó đúng ra sao (dẫn số event) |
-| Failure mode | Mã FM-xx trong `docs/failure_taxonomy.md` |
-| Đối chứng | Cùng claim@seed trên shape `fixed`: bước đó khác thế nào |
-| Regression test | Tên test + grader/assert nào bắt được; đã thấy fail trên variant lỗi và pass trên `fixed` chưa |
-| Chưa chắc chắn | Điều trace không chứng minh được |
+| Trial | `seeded_regression C-002@11`, run ID `E-seeded_regression-20261118-e2ed` |
+| Triệu chứng | Lab 8 grader FAIL `status resolved != denied`; ledger ghi 20.000đ với 1 refund trong khi label ghi 0đ và 0 refund; reply nói “đã hoàn 20.000đ”. |
+| Bước sai đầu tiên | Event 3 `model_override`: `{"delay_days":5}` thay giá trị DB của đơn O-202 bằng dữ liệu 5 ngày từ ticket. |
+| Vì sao là bước *đầu tiên* | Event 1 `handoff` hợp lệ; event 2 `investigator` truy vấn đúng DB, đơn `O-202` có `delay_days=0`/trạng thái `delivered`. Chỉ sau event `model_override` mới thay đổi đường tính compensation. |
+| Failure mode | FM-03 `ticket_trust — tin ticket hơn DB` |
+| Đối chứng | `fixed C-002@11` không có `model_override`; quote được tính 0đ, status denied, ledger 0đ/0 refund và Lab 8 grader PASS. |
+| Regression test | `test_override_event_breaks_db_fact` trong `tests/test_lab9_graders.py` với `DbFactKept`; `test_wrong_amount_in_ledger` kiểm tra `RefundAmountCorrect`. Bởi seeded trace đã fail và fixed PASS. |
+| Chưa chắc chắn | Trace không tự chứng minh nguyên nhân lỗi nằm trong model hay code điều chỉnh ticket; nó chỉ chứng minh sự kiện override là bước sai đầu tiên quan sát được. |
 
 ## Quy tắc
 
